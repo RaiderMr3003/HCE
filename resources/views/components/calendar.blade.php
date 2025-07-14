@@ -19,13 +19,6 @@
             </div>
             <div class="modal-body">
                 <form id="form-cita">
-                    <div class="mb-3">
-                        <label for="eventTitle" class="form-label">Buscar Paciente</label>
-                        <select name="txtPaciente" id="txtPaciente" class="form-select" required>
-                            <option value=""></option>
-                            <option value="0">(PACIENTE NUEVO)</option>
-                        </select>
-                    </div>
                     <div class="row align-items-center">
                         <div class="col mb-3">
                             <label for="citaFecha" class="form-label">Fecha</label>
@@ -39,6 +32,14 @@
                             <label for="citafin" class="form-label">H. Fin</label>
                             <input type="text" class="form-control" id="citaFin" disabled>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventTitle" class="form-label">Buscar Paciente</label>
+                        <select name="txtPaciente" id="txtPaciente" required>
+                            <option value=""></option>
+                            <option value="0">(PACIENTE NUEVO)</option>
+                        </select>
+                        <input type="hidden" class="form-control" id="idPaciente" disabled>
                     </div>
                     <div class="mb-3">
                         <label for="tpcita" class="form-label">Tipo de Cita</label>

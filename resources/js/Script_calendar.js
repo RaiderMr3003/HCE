@@ -3,6 +3,8 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es';
 import { Modal } from 'bootstrap';
+import TomSelect from 'tom-select';
+import 'tom-select/dist/css/tom-select.css'
 
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
 
@@ -84,6 +86,34 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('citainicio').value = '';
             document.getElementById('citafin').value = '';
         });
+
+        const pacienteInput = document.getElementById('txtPaciente');
+        const idPacienteInput = document.getElementById('idPaciente');
+
+        window.pacienteSelect = new TomSelect(pacienteInput, {
+            valueField: 'id',
+            labelField: 'label',
+            searchField: ['label'],
+            maxItems: 1,
+            create: false,
+            placeholder: 'Buscar paciente...',
+            load: function(query, callback) {
+                if (!query.length) return callback();
+
+                axios.get('/pacientes/buscar', { params: { q: query } })
+                    .then(res => {
+                        const results = res.data.map(p => ({
+                            id: p.id,
+                            label: `${p.nombre_completo}`
+                        }));
+                        callback(results);
+                    })
+                    .catch(() => callback());
+            },
+            onChange: function(value) {
+                idPacienteInput.value = value;
+            }
+        });
     }
 
     function formatearCabeceraDia(date) {
@@ -97,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
             year: 'numeric',
         }).toUpperCase();
     }
-
     init();
 
 });

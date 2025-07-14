@@ -22,13 +22,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             EstadoCivilSeeder::class,
             GradoAcademicoSeeder::class,
-            PersonaSeeder::class,
             RazaSeeder::class,
             ReligionSeeder::class,
             SexoSeeder::class,
             TipoDocumentoSeeder::class,
             UbigeoSeeder::class,
             UserSeeder::class,
+            PersonaSeeder::class,
             // Agrega aquí otros seeders que tengas
         ]);
     }

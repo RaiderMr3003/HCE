@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\AuthController;
 
+require __DIR__.'/home.php';
 
 /*
 |--------------------------------------------------------------------------
