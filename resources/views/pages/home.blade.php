@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ asset('icons/app.ico') }}">
     <title>HCE | Control de Citas</title>
-    @vite(['resources/js/app.js'])
+    @vite(['resources/js/app.js', 'resources/js/Script_calendar.js'])
 </head>
 <body>
     <x-header />
