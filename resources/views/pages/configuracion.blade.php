@@ -33,7 +33,7 @@
                         </ul>
                         <ul class="list-group">
                             <li class="list-group-item">
-                                <a href="#" class="text-danger"><i class="bi bi-power me-2"></i>Cerrar Sesión</a>
+                                <a href="{{ route('logout') }}" class="text-danger"><i class="bi bi-power me-2"></i>Cerrar Sesión</a>
                             </li>
                         </ul>
                     </div>

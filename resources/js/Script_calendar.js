@@ -2,10 +2,8 @@ import { Calendar } from '@fullcalendar/core'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es';
-import { Modal } from 'bootstrap';
 import TomSelect from 'tom-select';
 import 'tom-select/dist/css/tom-select.css'
-
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -13,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     function init() {
         const calendarEl = document.getElementById('calendar');
-        const modalCita = new Modal(document.getElementById('modal-cita'));
+        const modalCita = new bootstrap.Modal(document.getElementById('modal-cita'));
 
         calendar = new Calendar(calendarEl, {
             plugins: [timeGridPlugin, interactionPlugin, bootstrap5Plugin],
@@ -75,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         calendar.render();
+        ListarPacientes();
         events();
     }
 
@@ -83,35 +82,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const formCita = document.getElementById('form-cita');
         modalElement.addEventListener('hidden.bs.modal', function () {
             formCita.reset();
-            document.getElementById('citainicio').value = '';
-            document.getElementById('citafin').value = '';
-        });
-
-        const pacienteInput = document.getElementById('txtPaciente');
-        const idPacienteInput = document.getElementById('idPaciente');
-
-        window.pacienteSelect = new TomSelect(pacienteInput, {
-            valueField: 'id',
-            labelField: 'label',
-            searchField: ['label'],
-            maxItems: 1,
-            create: false,
-            placeholder: 'Buscar paciente...',
-            load: function(query, callback) {
-                if (!query.length) return callback();
-
-                axios.get('/pacientes/buscar', { params: { q: query } })
-                    .then(res => {
-                        const results = res.data.map(p => ({
-                            id: p.id,
-                            label: `${p.nombre_completo}`
-                        }));
-                        callback(results);
-                    })
-                    .catch(() => callback());
-            },
-            onChange: function(value) {
-                idPacienteInput.value = value;
+            document.getElementById('citaInicio').value = '';
+            document.getElementById('citaFin').value = '';
+            document.getElementById('nombre').value = '';
+            document.getElementById('ap_paterno').value = '';
+            const clearBtn = document.querySelector('#txtPaciente + .ts-wrapper .clear-button');
+            if (clearBtn) {
+                clearBtn.click();
             }
         });
     }
@@ -127,6 +104,68 @@ document.addEventListener('DOMContentLoaded', function () {
             year: 'numeric',
         }).toUpperCase();
     }
+
+    function ListarPacientes() {
+        const pacienteInput = document.getElementById('txtPaciente');
+        const idPacienteInput = document.getElementById('idPaciente');
+
+        if (pacienteInput.tomselect) {
+            pacienteInput.tomselect.destroy();
+        }
+
+        new TomSelect(pacienteInput, {
+            valueField: 'id',
+            labelField: 'label',
+            searchField: ['label'],
+            maxItems: 1,
+            create: false,
+            plugins: ['clear_button'],
+            placeholder: 'Buscar paciente...',
+            options: [
+                {
+                    id: 0,
+                    label: '(PACIENTE NUEVO)',
+                    dni: '',
+                    nombre_completo: '(PACIENTE NUEVO)'
+                }
+            ],
+            render: {
+                option: function(data, escape) {
+                    return `<div>${escape(data.dni)} - ${escape(data.nombre_completo)}</div>`;
+                },
+                item: function(data, escape) {
+                    return `<div>${escape(data.nombre_completo)}</div>`;
+                }
+            },
+            load: function(query, callback) {
+                if (!query.length) return callback();
+
+                axios.get('/pacientes/buscar', { params: { q: query } })
+                    .then(res => {
+                        const results = res.data.map(p => ({
+                            id: p.id,
+                            nombre_completo: p.nombre_completo,
+                            dni: p.nro_documento,
+                            label: `${p.nro_documento} - ${p.nombre_completo}`
+                        }));
+                        callback(results);
+                    })
+                    .catch(() => callback());
+            },
+            onChange: function(value) {
+                if (value === '0') {
+                    document.getElementById('pacienteNuevo').classList.remove('d-none');
+                    document.getElementById('nombre').value = '';
+                    document.getElementById('ap_paterno').value = '';
+                } else {
+                    document.getElementById('pacienteNuevo').classList.add('d-none');
+                }
+ 
+            }
+        });
+    }
+
+
     init();
 
 });
