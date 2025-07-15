@@ -31,7 +31,7 @@ Route::middleware('guest')->group(function () {
 });
 
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::view('/home', 'pages.home')->name('home');
     Route::view('/historia-clinica', 'pages.historia_clinica')->name('historia_clinica');
     Route::view('/configuracion', 'pages.configuracion')->name('configuracion');
